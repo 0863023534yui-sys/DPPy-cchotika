@@ -3,7 +3,7 @@ new = []
 
 for i in original:
     if i > 5:
-        new.append(i + 2 )
+        new.append(i + 2)
         
 print(original)
 print(new)
