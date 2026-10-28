@@ -1,6 +1,7 @@
 #!/usr/bin/env python3
 j = 1
 for i in range(11):
-    print(f"Table de {i}: ")
+    print(f"Table de {i}: ", end="")
     for j in range(1, 11):
-        print(f"{i * j}")
+        print(f"{i * j} ", end="")
+    print()
