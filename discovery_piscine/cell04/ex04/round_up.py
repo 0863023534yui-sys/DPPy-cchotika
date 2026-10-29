@@ -1,7 +1,4 @@
 #!/usr/bin/env python3
+import math as m
 i = str(input("Give me a number: "))
-num = float(i)
-if num % 1 == 0: #checks if it is a whole number.
-    print(int(num))
-else:
-    print(int(num) + 1)
+print(m.ceil(float(i)))

@@ -4,8 +4,8 @@ new = []
 
 for i in original:
     if i > 5:
-        v = i + 2
-        if v not in new:
-            new.append(v)
+        new.append(i + 2)
+nnew = set(new)
+
 print(original)
-print(new)
+print(nnew)
