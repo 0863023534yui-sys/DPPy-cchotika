@@ -1,10 +1,12 @@
 #!/usr/bin/env python3
 import random
-import math as m
 
-# Code
+BOARD_SIZE = 5
+TOTAL_SQUARES = BOARD_SIZE * BOARD_SIZE
+
+
 def show_menu():
-    print(r""" 
+    print(r"""
    _____  __________ ______  _  __  ____      __   ___   ___  ___  _______ 
   / _ \ \/ /_  __/ // / __ \/ |/ / / __/___  / /  / _ | / _ \/ _ \/ __/ _ \
  / ___/\  / / / / _  / /_/ /    /  > _/_ _/ / /__/ __ |/ // / // / _// , _/
@@ -12,30 +14,27 @@ def show_menu():
 
 1. Start
 2. Rules
-3. Exit  
-    """)
-
-BOARD_SIZE = 5
-TOTAL_SQUARES = BOARD_SIZE * BOARD_SIZE
-P1 = int(1)
-P1_name = str()
-P2 = int(1)
-P2_name = str()
-dice = int()
-
-def players_position():
-    if P1 == P2:
-                print(f"Both players are currently at square {P1}.")
-    else:
-                print(f"{P1_name} is at square {P1}.") 
-                print(f"{P2_name} is at square {P2}.")
+3. Exit
+""")
 
 
-def board_setup(): #format for the board
+def show_rules():
+    print("""
+-= RULES =-
+The game has two players. Each player takes turns rolling a D6 (1-6).
+The first player to reach square 25 wins.
+You must roll the exact number to land on square 25.
+The 5x5 board contains one ladder and one snake.
+Ladder: landing on its start square moves you up to its end square.
+Snake: landing on its start square moves you down to its end square.
+""")
+    input("Press Enter to return to the menu...")
+
+
+def board_setup():
     board = []
     number = 1
 
-    # Create a 5 x 5 board
     for row in range(BOARD_SIZE):
         current_row = []
 
@@ -43,104 +42,117 @@ def board_setup(): #format for the board
             current_row.append(number)
             number += 1
 
-        # Reverse every other row for the usual
-        # Snake and Ladder numbering pattern
+        # Reverse every other row to create the zigzag numbering pattern.
         if row % 2 == 1:
             current_row.reverse()
 
         board.append(current_row)
 
-    # Display the highest-numbered row at the top
+    # Show the highest-numbered row at the top.
     board.reverse()
     return board
 
-def show_board(board): # for displaying the board
-    print(r"◤━━━━━━━━━━━━━━━━◥")
+
+def show_board(board):
+    print("◤━━━━━━━━━━━━━━━━◥")
     for row in board:
-        for square in row:
-            print(f"{square:2}", end="  ")
-        print()
-    print(r"◣━━━━━━━━━━━━━━━━◢")
+        print("  ".join(f"{square:2}" for square in row))
+    print("◣━━━━━━━━━━━━━━━━◢")
+
+
+def players_position(players):
+    print("\nCurrent positions:")
+    for player in players:
+        print(f"{player['name']}: square {player['position']}")
 
 
 def generate_ladder_and_snake():
-    # Generate ladder
-    ladder_start = random.randint(2, TOTAL_SQUARES - 6)
-    ladder_end = random.randint(ladder_start + 5, TOTAL_SQUARES)
-
-    # Generate snake
-    snake_start = random.randint(6, TOTAL_SQUARES)
-    snake_end = random.randint(1, snake_start - 5)
-
-    # Regenerate if any positions overlap
-    while (
-        ladder_start in (snake_start, snake_end)
-        or ladder_end in (snake_start, snake_end)
-    ):
+    # Keep generating until the ladder and snake use four different squares.
+    while True:
         ladder_start = random.randint(2, TOTAL_SQUARES - 6)
         ladder_end = random.randint(ladder_start + 5, TOTAL_SQUARES)
 
         snake_start = random.randint(6, TOTAL_SQUARES)
         snake_end = random.randint(1, snake_start - 5)
 
-    return ladder_start, ladder_end, snake_start, snake_end
+        positions = [ladder_start, ladder_end, snake_start, snake_end]
+        if len(set(positions)) == len(positions):
+            return ladder_start, ladder_end, snake_start, snake_end
 
 
-# Interface
+def play_game():
+    # Ask for player names, using defaults only when the input is blank.
+    p1_name = input("Player 1, enter your name: ").strip()
+    if not p1_name:
+        p1_name = "Player 1"
+
+    p2_name = input("Player 2, enter your name: ").strip()
+    if not p2_name:
+        p2_name = "Player 2"
+
+    # Keep each player's name and position together.
+    # A list of dictionaries also allows both players to share the same name.
+    players = [
+        {"name": p1_name, "position": 1},
+        {"name": p2_name, "position": 1},
+    ]
+
+    board = board_setup()
+    show_board(board)
+
+    ladder_start, ladder_end, snake_start, snake_end = generate_ladder_and_snake()
+    print(f"\nLadder: square {ladder_start} -> square {ladder_end}")
+    print(f"Snake:  square {snake_start} -> square {snake_end}")
+
+    current_player = random.randint(0, 1)
+    print(f"\n{players[current_player]['name']} will start the game.")
+
+    while True:
+        player = players[current_player]
+        players_position(players)
+
+        input(f"\n{player['name']}, press Enter to roll the dice...")
+        dice = random.randint(1, 6)
+        print(f"{player['name']} rolled a {dice}.")
+
+        new_position = player["position"] + dice
+
+        player["position"] = min(new_position, TOTAL_SQUARES)
+
+        if player["position"] == ladder_start:
+                print(f"Ladder! {player['name']} climbs to square {ladder_end}.")
+                player["position"] = ladder_end
+        elif player["position"] == snake_start:
+                print(f"Snake! {player['name']} slides down to square {snake_end}.")
+                player["position"] = snake_end
+
+        if player["position"] == TOTAL_SQUARES:
+            players_position(players)
+            print(f"\n{player['name']} wins!")
+            break
+
+        # Switch to the other player.
+        current_player = 1 - current_player
+
+
 def main():
     show_menu()
+
     while True:
-        choice = input("(1-3): ")
-        if choice == '1': 
-            P1 = 1
-            P2 = 1
-            #Enter names
-            P1_name = input("Player 1, enter your name: ")
-            if P1_name == "":
-                print("Name empty, defaulting to 'Player 1'.")
-            P1_name = "Player 1"
-            P2_name = input("Player 2, enter your name: ")
-            if P2_name == "":
-                print("Name empty, defaulting to 'Player 2'.")
-            P2_name = "Player 2"
+        choice = input("Choose an option (1-3): ").strip()
 
-            #Setting up board
-            board = board_setup()
-            show_board(board)
-            Ladder1_start, Ladder1_end, Snake1_start, Snake1_end = generate_ladder_and_snake()
-            print(f"A ladder starts at square {Ladder1_start} and ends at square {Ladder1_end}.")
-            print(f"A python starts at square {Snake1_start} and ends at square {Snake1_end}.")
-            
-            first_player = random.choice([P1_name, P2_name]) # Change to switch instead
-            print(f"{first_player} will start the game.")
-
-            
-            
-            while P1 != 25 and P2 != 25:
-                players_position()
-                dice = input("Press Enter to roll the dice...")
-                dice = random.randint(1, 6)
-                print(f"{first_player} rolled a {dice}!")
-                
-
-            
-        elif choice == '2':
-            print(r''' 
--= RULES =-
-The game consists of 2 players. Each player takes turns to roll a dice (1-6) to move. 
-The first player to reach the end of the board wins.
--= Gameplay Elements =-
-The board (5x5) includes a ladder and a python placed at random square.
-Ladder: climb up to a higher position on the board.
-Python: slide down to a lower position on the board.
-''')
-
-        elif choice == '3':
+        if choice == "1":
+            play_game()
+            show_menu()
+        elif choice == "2":
+            show_rules()
+            show_menu()
+        elif choice == "3":
             print("Exiting...")
             break
         else:
-            print("Invalid choice. Please try again.")
+            print("Invalid choice. Please enter 1, 2, or 3.")
 
 
-if __name__ == "__main__": #start the program
+if __name__ == "__main__":
     main()
