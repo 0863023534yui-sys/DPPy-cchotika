@@ -116,7 +116,6 @@ def play_game():
         print(f"{player['name']} rolled a {dice}.")
 
         new_position = player["position"] + dice
-
         player["position"] = min(new_position, TOTAL_SQUARES)
 
         if player["position"] == ladder_start:
