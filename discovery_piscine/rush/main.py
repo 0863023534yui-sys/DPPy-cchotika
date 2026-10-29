@@ -2,16 +2,15 @@
 
 # ---
 # Library imports
-# ---
+
 import random
-
-
+from turtle import title
 
 # ---
-# User Interface
-# ---
+# Main Code
 
-title_art = r""" 
+def show_menu():
+    print (r""" 
    _____  __________ ______  _  __  ____      __   ___   ___  ___  _______ 
   / _ \ \/ /_  __/ // / __ \/ |/ / / __/___  / /  / _ | / _ \/ _ \/ __/ _ \
  / ___/\  / / / / _  / /_/ /    /  > _/_ _/ / /__/ __ |/ // / // / _// , _/
@@ -20,6 +19,21 @@ title_art = r"""
 1. Start
 2. Rules
 3. Exit  
-"""
+    """)
 
-print (title_art)
+
+    # Add game logic here
+def main_game():
+    print("Welcome to the game!")
+
+    # Add game logic here
+
+def board():
+    print("This is the game board.")
+
+
+# ---
+# Main Progam
+
+
+
