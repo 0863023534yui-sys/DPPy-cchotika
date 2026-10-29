@@ -72,7 +72,7 @@ def generate_ladder_and_snake():
         ladder_start = random.randint(2, TOTAL_SQUARES - 6)
         ladder_end = random.randint(ladder_start + 5, TOTAL_SQUARES)
 
-        snake_start = random.randint(6, TOTAL_SQUARES)
+        snake_start = random.randint(6, TOTAL_SQUARES - 1)
         snake_end = random.randint(1, snake_start - 5)
 
         positions = [ladder_start, ladder_end, snake_start, snake_end]
