@@ -110,15 +110,20 @@ def main():
             Ladder1_start, Ladder1_end, Snake1_start, Snake1_end = generate_ladder_and_snake()
             print(f"A ladder starts at square {Ladder1_start} and ends at square {Ladder1_end}.")
             print(f"A python starts at square {Snake1_start} and ends at square {Snake1_end}.")
-            first_player = random.choice([P1_name, P2_name])
+            
+            first_player = random.choice([P1_name, P2_name]) # Change to switch instead
             print(f"{first_player} will start the game.")
-            
-            players_position()
-            
-            dice = input("Press Enter to roll the dice...")
-            dice = random.randint(1, 6)
-            print(f"{first_player} rolled a {dice}!")    
 
+            
+            
+            while P1 != 25 and P2 != 25:
+                players_position()
+                dice = input("Press Enter to roll the dice...")
+                dice = random.randint(1, 6)
+                print(f"{first_player} rolled a {dice}!")
+                
+
+            
         elif choice == '2':
             print(r''' 
 -= RULES =-
