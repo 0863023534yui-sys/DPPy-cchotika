@@ -21,8 +21,6 @@ def show_menu():
 3. Exit  
     """)
 
-
-    # Add game logic here
 def main_game():
     print("Welcome to the game!")
 
@@ -35,5 +33,18 @@ def board():
 # ---
 # Main Progam
 
+def main():
+    show_menu()
 
-
+    while True:
+        
+        choice = input("Enter your choice (1-3): ")
+        if choice == '1':
+            main_game()
+        elif choice == '2':
+            print("Game rules: ...")  # Add actual rules here
+        elif choice == '3':
+            print("Exiting the game.")
+            break
+        else:
+            print("Invalid choice. Please try again.")
