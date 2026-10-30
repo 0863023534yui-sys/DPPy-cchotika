@@ -1,8 +1,7 @@
 #!/usr/bin/env python3
 import sys
-n = (sys.argv[1:])
-
-if n != 0:
-     print(" ".join(n[::-1]))
-else:
-    print("none")
+if len(sys.argv) >=3:
+    for i in range(len(sys.argv) -1,0,-1):
+     print(sys.argv[i])
+else:    
+     print("none")
